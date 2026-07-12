@@ -38,9 +38,7 @@ function applyTheme(theme: Theme) {
 }
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>(() => {
-    return getStoredTheme() ?? getPreferredTheme();
-  });
+  const [theme, setThemeState] = useState<Theme>(() => getStoredTheme() ?? getPreferredTheme());
 
   useEffect(() => {
     const initialTheme = getStoredTheme() ?? getPreferredTheme();
@@ -82,10 +80,11 @@ export function ThemeToggle() {
     <button
       type="button"
       aria-label="Toggle color theme"
+      title="Toggle color theme"
       onClick={toggleTheme}
-      className="inline-flex h-10 w-10 items-center justify-center rounded-full border-2 border-black bg-white text-black transition hover:bg-cream dark:border-cream dark:bg-black dark:text-cream dark:hover:bg-white/10"
+      className="neu-border neu-press flex h-10 w-10 items-center justify-center bg-white transition-colors hover:bg-black hover:text-white dark:bg-black dark:text-white dark:hover:bg-white dark:hover:text-black"
     >
-      {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+      {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
     </button>
   );
 }
