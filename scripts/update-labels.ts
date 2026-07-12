@@ -40,7 +40,7 @@ const issueLabelMap: Record<string, string> = {
   "Create a beautiful empty state for the Club Directory": "good-ui",
   "Add toast notifications for Login/Signup errors": "good-ui",
   "Make the dashboard sidebar responsive (mobile-friendly)": "good-ui",
-  "Add a \"Copy Link\" share button to individual event pages": "good-ui",
+  'Add a "Copy Link" share button to individual event pages': "good-ui",
   "Add JSDoc comments to Supabase data fetching hooks": "good-backend",
   "Improve accessibility by adding aria-labels to all icon-only buttons": "good-ui",
   "Design a better 404 Not Found page": "good-ui",
@@ -59,7 +59,7 @@ const issueLabelMap: Record<string, string> = {
 };
 
 // 3. Helper for API Requests
-async function githubRequest(endpoint: string, method: string = "GET", body?: any) {
+async function githubRequest(endpoint: string, method: string = "GET", body?: unknown) {
   const response = await fetch(`${API_BASE}${endpoint}`, {
     method,
     headers: {
@@ -74,7 +74,7 @@ async function githubRequest(endpoint: string, method: string = "GET", body?: an
     console.error(`❌ GitHub API Error (${response.status}) on ${endpoint}: ${errorText}`);
     return null;
   }
-  
+
   if (response.status === 204) return true;
   return await response.json();
 }
@@ -83,7 +83,7 @@ async function githubRequest(endpoint: string, method: string = "GET", body?: an
 async function updateIssueLabels() {
   console.log(`🚀 Starting Label Update for repo: ${GITHUB_REPO}\n`);
   console.log("⏳ Fetching all open issues...");
-  
+
   // Fetch existing issues
   const existingIssues = await githubRequest("/issues?state=open&per_page=100");
   if (!existingIssues || !Array.isArray(existingIssues)) {
@@ -104,25 +104,25 @@ async function updateIssueLabels() {
     if (newLabel) {
       console.log(`🔄 Updating Issue #${issue.number}: "${title}"`);
       console.log(`   -> Setting label to: [ECSoC26, ${newLabel}]`);
-      
+
       const res = await githubRequest(`/issues/${issue.number}`, "PATCH", {
         labels: ["ECSoC26", newLabel], // Re-add the ECSoC26 label alongside the new one
       });
-      
+
       if (res) {
         updatedCount++;
         console.log(`   ✅ Success`);
       } else {
         console.log(`   ❌ Failed`);
       }
-      
+
       // Delay to avoid hitting rate limits
       await new Promise((resolve) => setTimeout(resolve, 1000));
     } else {
       console.log(`⏭️  Skipping Issue #${issue.number}: "${title}" (No exact match in map)`);
     }
   }
-  
+
   console.log(`\n🎉 Done! Successfully updated labels on ${updatedCount} issues.`);
 }
 
