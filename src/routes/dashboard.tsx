@@ -2,6 +2,7 @@ import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { SiteShell } from "@/components/site/SiteShell";
 import { useQuery } from "@tanstack/react-query";
 import { createClient } from "@/lib/supabase/client";
+import { Button } from "@/components/ui/button"; // Added unified Button component import
 import { useEffect, useState } from "react";
 import { User } from "@supabase/supabase-js";
 import { ProfileHeaderSkeleton } from "@/components/ProfileHeaderSkeleton";
@@ -65,18 +66,18 @@ function Dashboard() {
     queryFn: async () => {
       // Fetch events the user has RSVP'd to that are in the future
       const { data } = await supabase
-        .from("event_rsvps")
+        .from("events")
         .select(
           `
-          event_id,
-          events (
-            title, event_date,
-            clubs (name)
+          *,
+          clubs (name),
+          event_rsvps!inner (
+            id, user_id
           )
         `,
         )
-        .eq("user_id", user?.id)
-        .gte("events.event_date", new Date().toISOString())
+        .eq("event_rsvps.user_id", user?.id)
+        .gte("event_date", new Date().toISOString())
         .limit(3);
       return data || [];
     },
@@ -124,10 +125,10 @@ function Dashboard() {
             ) : (
               <ul className="divide-y-2 divide-black">
                 {upcomingEvents.map((r, i) => {
-                  const e = Array.isArray(r.events) ? r.events[0] : r.events;
-                  const c = e && !Array.isArray(e.clubs) ? e.clubs : null;
+                  const e = r;
+                  const c = Array.isArray(r.clubs) ? r.clubs[0] : r.clubs;
                   return (
-                    <li key={r.event_id} className="flex items-center gap-4 py-4">
+                    <li key={r.id} className="flex items-center gap-4 py-4">
                       <div
                         className={`neu-border ${colors[i % colors.length]} shrink-0 px-3 py-2 text-center font-mono text-xs font-bold`}
                       >
@@ -141,9 +142,14 @@ function Dashboard() {
                         <p className="truncate font-display text-lg font-bold">{e?.title}</p>
                         <p className="font-mono text-xs">{c?.name}</p>
                       </div>
-                      <button className="neu-border shrink-0 bg-white px-3 py-1 font-mono text-xs font-bold uppercase">
+                      {/* ✨ Replaced the raw HTML button with our unified Button component */}
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="neu-border shrink-0 bg-white px-3 py-1 font-mono text-xs font-bold uppercase"
+                      >
                         RSVP'd
-                      </button>
+                      </Button>
                     </li>
                   );
                 })}
@@ -191,6 +197,7 @@ function Dashboard() {
   );
 }
 
+// Widget component implementation below remains unchanged...
 function Widget({
   title,
   cta,
