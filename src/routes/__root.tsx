@@ -114,14 +114,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "CampusConnect — Community & event OS for college clubs" },
+      { title: "CampusConnect Hub" },
       {
         name: "description",
         content:
           "Open-source community and event management platform for college clubs and tech communities. Run events, grow clubs, issue certificates.",
       },
       { name: "author", content: "CampusConnect" },
-      { property: "og:title", content: "CampusConnect — Community & event OS for college clubs" },
+      { property: "og:title", content: "CampusConnect Hub" },
       {
         property: "og:description",
         content:
@@ -136,7 +136,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: appCss,
       },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "icon", href: "/favicon.png", type: "image/png" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
