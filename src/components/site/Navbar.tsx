@@ -17,6 +17,7 @@ export function Navbar() {
   const currentPath = location.pathname;
   const supabase = createClient();
   const [user, setUser] = useState<User | null>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => setUser(user));
@@ -55,20 +56,35 @@ export function Navbar() {
             );
           })}
         </nav>
-        <div className="flex items-center gap-3">
+        <button
+          className="flex items-center justify-center md:hidden"
+          aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"}
+          aria-expanded={menuOpen}
+          aria-controls="mobile-nav"
+          onClick={() => setMenuOpen((o) => !o)}
+        >
+          <span className="text-2xl">{menuOpen ? "✕" : "☰"}</span>
+        </button>
+        <div className="flex items-center gap-2">
           <ThemeToggle />
           {user && <NotificationBell />}
 
           {user ? (
-            <Link to="/dashboard" className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-black bg-lime font-mono text-xs font-bold uppercase">
+            <Link
+              to="/dashboard"
+              className="flex items-center gap-2"
+              aria-label="Go to your dashboard"
+            >
+              <div
+                className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-black bg-lime font-mono text-xs font-bold uppercase"
+                aria-hidden="true"
+              >
                 {user.email?.[0].toUpperCase() ?? "U"}
               </div>
             </Link>
           ) : (
             <Link
               to="/auth"
-<<<<<<< HEAD
               className="neu-border neu-press bg-black px-4 py-2 font-mono text-xs font-bold uppercase text-cream hover:bg-cream hover:text-black dark:bg-cream dark:text-black dark:hover:bg-black dark:hover:text-cream"
               style={{ letterSpacing: "0.08em" }}
             >
@@ -77,6 +93,35 @@ export function Navbar() {
           )}
         </div>
       </div>
+      {menuOpen && (
+        <nav
+          id="mobile-nav"
+          className="border-t-2 border-black bg-white px-4 py-3 md:hidden dark:bg-black"
+        >
+          <ul className="flex flex-col gap-3">
+            {links.map((l) => {
+              const isActive =
+                l.to === "/"
+                  ? currentPath === "/"
+                  : currentPath === l.to || currentPath.startsWith(l.to + "/");
+              return (
+                <li key={l.to}>
+                  <Link
+                    to={l.to}
+                    onClick={() => setMenuOpen(false)}
+                    className={`block font-mono text-sm font-bold uppercase hover:underline ${
+                      isActive ? "underline underline-offset-4 decoration-2" : ""
+                    }`}
+                    style={{ letterSpacing: "0.05em" }}
+                  >
+                    {l.label}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
+      )}
     </header>
   );
 }
