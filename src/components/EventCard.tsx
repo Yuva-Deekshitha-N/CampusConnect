@@ -255,6 +255,7 @@ export function EventCard({ event, index, user, onRsvpToggle, isRsvpPending }: E
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
+
           {hasRsvpd && googleCalendarUrl && (
             <a
               href={googleCalendarUrl}
@@ -268,7 +269,6 @@ export function EventCard({ event, index, user, onRsvpToggle, isRsvpPending }: E
           )}
         </div>
       ) : null}
-
       <div className="mt-4 flex gap-2">
         <a
           href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.href)}`}
