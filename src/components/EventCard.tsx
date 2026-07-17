@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { formatDate, getGoogleCalendarUrl } from "@/lib/utils";
 import { FormEvent, useState } from "react";
-import { Calendar, Check, Share2, X, Link as LinkIcon } from "lucide-react";
+import { Calendar, Check, Share2, X, Bookmark, Link as LinkIcon } from "lucide-react";
 import { toast } from "sonner";
 import { ConfirmModal } from "@/components/ui/confirm-modal";
 import { Button } from "@/components/ui/button";
@@ -129,7 +129,7 @@ export function EventCard({ event, index, user, onRsvpToggle, isRsvpPending }: E
 
       <dl className="mt-5 grid gap-4 sm:grid-cols-3">
         <div>
-          <dt className="font-mono text-xs font-bold uppercase">Date &amp; Time</dt>
+          <dt className="font-mono text-xs font-bold uppercase">Date & Time</dt>
           <dd className="mt-1 text-sm">
             {event.event_date ? formatDate(event.event_date) : "TBA"}
           </dd>
@@ -140,7 +140,7 @@ export function EventCard({ event, index, user, onRsvpToggle, isRsvpPending }: E
         </div>
         <div>
           <dt className="font-mono text-xs font-bold uppercase">Attendees</dt>
-          <dd className="mt-1 text-sm">{rsvps.length} RSVP&apos;d</dd>
+          <dd className="mt-1 text-sm">{rsvps.length} RSVP'd</dd>
         </div>
       </dl>
 
