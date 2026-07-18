@@ -17,8 +17,7 @@ interface Event {
   banner_url?: string | null;
   clubs: { name: string } | { name: string }[] | null;
   event_rsvps: { id: string; user_id: string }[] | null;
-  saved_events?: { id: string; user_id: string }[] | null;
-  attendee_count?: number;
+  saved_events: { id: string; user_id: string }[] | null;
 }
 
 interface EventCardProps {
@@ -57,6 +56,7 @@ export function EventCard({
 
   const [copied, setCopied] = useState(false);
   const [ticketOpen, setTicketOpen] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
 
   const handleCopyLink = async () => {
     const shareUrl = `${window.location.origin}${window.location.pathname}#event-${event.id}`;
@@ -94,7 +94,6 @@ export function EventCard({
 
     onRsvpToggle(event.id, false);
   };
-  const [confirmOpen, setConfirmOpen] = useState(false);
 
   const savedEventsList = Array.isArray(event.saved_events) ? event.saved_events : [];
   const isSaved = user ? savedEventsList.some((se) => se.user_id === user.id) : false;
