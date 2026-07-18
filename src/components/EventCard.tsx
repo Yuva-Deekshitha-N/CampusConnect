@@ -1,11 +1,12 @@
-import { Link } from "react-router-dom";
-import { formatDate, formatEventDateRange, getGoogleCalendarUrl } from "@/lib/utils";
-import { FormEvent, useState } from "react";
-import { Calendar, Check, Share2, X, Bookmark, Link as LinkIcon } from "lucide-react";
+import { formatEventDateRange, getGoogleCalendarUrl } from "@/lib/utils";
+import { useState } from "react";
+import { Calendar, Check, Share2, Bookmark, Link as LinkIcon } from "lucide-react";
 import { toast } from "sonner";
 import { TicketDialog } from "@/components/ui/ticket-modal";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { EventDateBadge } from "@/components/EventDateBadge";
+import { EventRSVPButton } from "@/components/EventRSVPButton";
 
 interface Event {
   id: string;
@@ -57,6 +58,7 @@ export function EventCard({
 
   const [copied, setCopied] = useState(false);
   const [ticketOpen, setTicketOpen] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
 
   const handleCopyLink = async () => {
     try {
@@ -93,7 +95,6 @@ export function EventCard({
 
     onRsvpToggle(event.id, false);
   };
-  const [confirmOpen, setConfirmOpen] = useState(false);
 
   const savedEventsList = Array.isArray(event.saved_events) ? event.saved_events : [];
   const isSaved = user ? savedEventsList.some((se) => se.user_id === user.id) : false;
@@ -112,9 +113,7 @@ export function EventCard({
       className={`neu-border p-5 relative ${colors[index % colors.length]}`}
     >
       <div className="flex items-start justify-between gap-3">
-        <p className="font-mono text-xs font-bold uppercase tracking-wider">
-          {event.event_date ? formatDate(event.event_date).split(" at ")[0].toUpperCase() : "TBA"}
-        </p>
+        <EventDateBadge eventDate={event.event_date} />
         <div className="flex items-center gap-2">
           {onBookmarkToggle && (
             <button
@@ -166,16 +165,13 @@ export function EventCard({
       </dl>
 
       <div className="mt-5 flex flex-wrap items-center gap-3">
-        <button
-          type="button"
-          onClick={handleRsvpClick}
-          disabled={isRsvpPending}
-          className={`neu-border px-4 py-2 font-mono text-xs font-bold uppercase tracking-wider transition-all duration-300 hover:scale-105 active:scale-95 disabled:cursor-not-allowed disabled:opacity-60 ${
-            hasRsvpd ? "bg-lime text-black" : "bg-black text-cream"
-          }`}
-        >
-          {isRsvpPending ? "Updating..." : hasRsvpd ? "RSVP'd ✓" : "RSVP →"}
-        </button>
+        <EventRSVPButton
+          eventId={event.id}
+          user={user}
+          hasRsvpd={hasRsvpd}
+          isPending={isRsvpPending}
+          onToggle={onRsvpToggle}
+        />
 
         <TooltipProvider>
           <Tooltip>
